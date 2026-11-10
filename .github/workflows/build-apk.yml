@@ -23,10 +23,11 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
-      - name: Set up Android SDK
-        uses: android-actions/setup-android@v3
+      - name: Auto-Accept Android SDK Licenses
+        run: |
+          yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses || true
 
-      - name: Install Dependencies & Prepare Assets
+      - name: Prepare Web Assets & Install Capacitor
         run: |
           npm install
           mkdir -p www
@@ -37,20 +38,20 @@ jobs:
             npx cap sync android
           fi
 
-      - name: Grant Android Permissions
+      - name: Grant Camera & Storage Permissions
         run: |
           MANIFEST="android/app/src/main/AndroidManifest.xml"
           if [ -f "$MANIFEST" ] && ! grep -q "android.permission.CAMERA" "$MANIFEST"; then
             sed -i 's|<application|<uses-permission android:name="android.permission.CAMERA" />\n    <application|' "$MANIFEST"
           fi
 
-      - name: Build APK with Gradle
+      - name: Build Standalone APK with Gradle
         working-directory: ./android
         run: |
           chmod +x gradlew
-          ./gradlew assembleDebug
+          ./gradlew assembleDebug --stacktrace
 
-      - name: Upload APK
+      - name: Upload Gulzar-Standalone.apk Artifact
         uses: actions/upload-artifact@v4
         with:
           name: Gulzar-Standalone-Android-APK
