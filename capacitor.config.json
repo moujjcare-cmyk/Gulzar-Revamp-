@@ -1,0 +1,9 @@
+{
+  "appId": "com.gulzar.smartgarden",
+  "appName": "Gulzar \u06af\u0644\u0632\u0627\u0631",
+  "webDir": "www",
+  "bundledWebRuntime": false,
+  "server": {
+    "androidScheme": "https"
+  }
+}
